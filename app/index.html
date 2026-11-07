@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BaseOfGamers — запись в компьютерный клуб</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>BaseOfGamers</h1>
+      <p class="subtitle">Запись в компьютерный клуб</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Форма записи</h2>
+
+      <form id="signup-form" novalidate>
+        <div class="field">
+          <label for="fullname">Фамилия и имя</label>
+          <input type="text" id="fullname" name="fullname" placeholder="Иванов Иван" autocomplete="off">
+          <p class="error" id="fullname-error" role="alert" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="email">Электронная почта</label>
+          <input type="email" id="email" name="email" placeholder="ivanov@example.com" autocomplete="off">
+          <p class="error" id="email-error" role="alert" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="phone">Телефон</label>
+          <input type="tel" id="phone" name="phone" placeholder="+375 29 123-45-67" autocomplete="off">
+          <p class="error" id="phone-error" role="alert" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="plan">Тариф</label>
+          <select id="plan" name="plan">
+            <option value="1">1 час — 15 BYN</option>
+            <option value="3">3 часа — 40 BYN</option>
+            <option value="6">6 часов — 76 BYN</option>
+            <option value="12">12 часов — 144 BYN</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="password">Пароль</label>
+          <input type="password" id="password" name="password" placeholder="не менее 6 символов" autocomplete="new-password">
+          <button type="button" class="toggle" id="toggle-password" aria-label="Показать пароль">Показать</button>
+          <p class="error" id="password-error" role="alert" hidden></p>
+        </div>
+
+        <button type="submit" class="submit" id="submit-button">Записаться</button>
+      </form>
+
+      <div class="success" id="success-message" role="status" hidden>
+        <strong>Запись создана!</strong>
+        <span id="success-details"></span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Ваши записи</h2>
+      <ul class="records" id="records-list">
+        <li class="empty">Записей пока нет</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Лабораторная работа 10 — организация CI/CD · БГТУ, 2026</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
