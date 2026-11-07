@@ -1,0 +1,82 @@
+name: CI
+
+# Автоматический запуск тестов при каждом отправлении изменений
+# и публикация приложения на GitHub Pages после успешных тестов в ветке main.
+on:
+  push:
+    branches: [main, dev, "fix/**"]
+  pull_request:
+    branches: [main, dev]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Автотесты пользовательского интерфейса
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Получение исходного кода
+        uses: actions/checkout@v4
+
+      - name: Установка Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Установка зависимостей
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r tests/requirements.txt
+
+      - name: Запуск Selenium-тестов
+        run: pytest tests -v --junitxml=reports/junit.xml
+
+      - name: Загрузка отчёта о прогонах
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-report
+          path: reports/junit.xml
+
+      - name: Загрузка снимков экрана при ошибке
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: reports/screenshots
+
+  deploy:
+    name: Публикация на GitHub Pages
+    # Деплой запускается только после успешного прохождения тестов
+    # и только для ветки main.
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Получение исходного кода
+        uses: actions/checkout@v4
+
+      - name: Настройка GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Загрузка статических файлов приложения
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./app
+
+      - name: Публикация
+        id: deployment
+        uses: actions/deploy-pages@v4
